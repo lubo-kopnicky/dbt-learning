@@ -1,7 +1,19 @@
-with payments as(
+with 
+
+source as (
+
+    select * from {{ source('stripe', 'payment') }}
+
+),
+
+paymetns as (
+
     select orderid as order_id,
            id as customer_id,
-           amount / 100 as amount
-    from `dbt-tutorial`.stripe.payment
+           status,
+           (amount / 100) as amount
+    from source
+
 )
-select * from payments
+
+select * from paymetns
